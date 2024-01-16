@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 16:25:41 by nrontey           #+#    #+#             */
-/*   Updated: 2024/01/16 13:37:15 by nrontey          ###   ########.fr       */
+/*   Updated: 2024/01/16 14:06:24 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	key_release(int keycode, t_data *data)
 int	destroy_hook(int keycode, t_data *data)
 {
 	(void)keycode;
-	data_clear(data, 0, 0);
+	(void)data;
+	data_clear(0, 0, 0);
 	return (0);
 }
