@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 12:39:46 by nrontey           #+#    #+#             */
-/*   Updated: 2024/01/11 15:43:51 by nrontey          ###   ########.fr       */
+/*   Updated: 2024/01/17 15:49:09 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ static void	texture_load(t_data *data, t_img **img, char *path)
 
 	*img = mlx_xpm_file_to_image(data->mlx, path, &width, &height);
 	if (*img == 0)
-		data_clear(0, "Can't load texture", 0);
+		data_clear(data, "Can't load texture", 0);
 	(*img)->width = width;
 	(*img)->height = height;
 }
