@@ -22,7 +22,7 @@ To run the project, use the following command:
 ```sh
 ./so_long <map.ber>
 ```
-Replace <map.ber> with the path to the map file you want to use.
+Replace `<map.ber>` with the path to the map file you want to use.
 
 ## About the 42 Cursus
 The 42 cursus is a software engineering program that emphasizes peer-to-peer learning, where students learn from each other in a project-based environment. This project is part of the cursus and is designed to help students learn about graphics programming with the MiniLibX library.
