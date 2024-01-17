@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 12:15:00 by nrontey           #+#    #+#             */
-/*   Updated: 2024/01/16 12:20:03 by nrontey          ###   ########.fr       */
+/*   Updated: 2024/01/17 14:33:11 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,6 @@ void			move_left(t_data *data, int x, int y);
 void			move_right(t_data *data, int x, int y);
 int				key_press(int keycode, t_data *data);
 int				key_release(int keycode, t_data *data);
-int				destroy_hook(int keycode, t_data *data);
+int				destroy_hook(t_data *data);
 
 #endif

@@ -36,9 +36,9 @@ int	main(int ac, char **av)
 		end("Hop Hop Hop invalid file ext (<name>.ber)", 0);
 	data = init_data(av[1]);
 	put_img_to_window(data);
-	mlx_hook(data->mlx_win, 2, 1L << 0, key_press, data);
-	mlx_hook(data->mlx_win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->mlx_win, 17, 1L << 17, destroy_hook, data);
+	mlx_hook(data->mlx_win, 3, 1L << 1, key_release, data);
+	mlx_hook(data->mlx_win, 2, 1L << 0, key_press, data);
 	mlx_loop(data->mlx);
 	return (0);
 }
