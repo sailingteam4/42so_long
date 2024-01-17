@@ -1,4 +1,4 @@
-# Project Title
+# So_long
 
 This is a C project that uses the libft library and the MiniLibX library.
 
