@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 16:14:04 by nrontey           #+#    #+#             */
-/*   Updated: 2024/01/16 14:32:43 by nrontey          ###   ########.fr       */
+/*   Updated: 2024/01/17 15:33:05 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@ static int	isber(char *file)
 {
 	int				len;
 
-	len = ft_strlen(file);
 	if (file == 0)
 		return (0);
+	len = ft_strlen(file);
 	if (len < 5)
 		return (0);
 	if (ft_strcmp(file + len - 4, ".ber") != 0)
