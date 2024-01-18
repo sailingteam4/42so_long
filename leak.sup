@@ -1,0 +1,20 @@
+{
+   <minilibx>
+   Memcheck:Param
+   writev(vector[0])
+   fun:writev
+   fun:UnknownInlinedFun
+   fun:_xcb_conn_wait.part.0
+   fun:UnknownInlinedFun
+   fun:_xcb_out_send
+   fun:UnknownInlinedFun
+   fun:xcb_writev
+   fun:_XSend
+   fun:_XReadEvents
+   fun:XWindowEvent
+   fun:mlx_int_wait_first_expose
+   fun:mlx_new_window
+   fun:init_mlx
+   fun:init_data
+   fun:main
+}

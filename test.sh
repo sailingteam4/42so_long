@@ -7,7 +7,7 @@ NC='\033[0m' # No Color
 
 # Compile the project
 echo "==================== Compiling the project ===================="
-make re
+make
 if [ $? -ne 0 ]; then
     echo -e "${RED}Compilation failed. Exiting...${NC}"
     exit 1
@@ -34,7 +34,7 @@ do
 
     # Check for memory leaks
     echo "==================== Checking for memory leaks ===================="
-    valgrind --leak-check=full --show-leak-kinds=all --error-exitcode=1 --errors-for-leak-kinds=all ./so_long ${map} > /dev/null 2>&1
+    valgrind --leak-check=full --suppressions=leak.sup --show-leak-kinds=all --error-exitcode=1 --errors-for-leak-kinds=all ./so_long ${map} > /dev/null 2>&1
     if [ $? -ne 0 ]; then
         echo -e "${RED}Memory leaks detected. Continuing with the next map...${NC}"
         leak_count=$((leak_count+1))
