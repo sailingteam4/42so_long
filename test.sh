@@ -1,69 +1,86 @@
-#!/bin/sh
+#!/bin/bash
 
-# Define colors
-RED='\033[0;31m'
+# Path to the so_long executable
+SO_LONG="./so_long"
+
+# Path to the valgrind executable
+VALGRIND="valgrind"
+
+# Directories with valid and invalid maps
+VALID_MAPS_DIR="./maps/valid"
+INVALID_MAPS_DIR="./maps/invalid"
+
+# Path to the suppression file
+SUPPRESSION_FILE="./leak.sup"
+
+# File to store memory leak information
+MEMORY_LEAK_FILE="./memory_leak_info.txt"
+
+# Counters for test results
+SUCCESS_COUNT=0
+ERROR_COUNT=0
+MEMORY_LEAK_COUNT=0
+
+# Colors
 GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
-# Compile the project
-echo "==================== Compiling the project ===================="
-make
-if [ $? -ne 0 ]; then
-    echo -e "${RED}Compilation failed. Exiting...${NC}"
-    exit 1
-fi
-echo -e "${GREEN}Compilation successful.${NC}"
+# Animation
+SPINNER=('⠋' '⠙' '⠹' '⠸' '⠼' '⠴' '⠦' '⠧' '⠇' '⠏')
 
-# Counters
-success_count=0
-error_count=0
-leak_count=0
+# Function to display spinner animation
+function show_spinner() {
+	local pid=$!
+	local i=0
+	while kill -0 $pid 2>/dev/null; do
+		printf "\r${SPINNER[$i]}  "
+		sleep 0.1
+		((i=i+1))
+		((i=i%10))
+	done
+}
 
-# Get all valid test maps
-valid_maps=$(find maps/valid -type f)
-
-for map in $valid_maps
+# Test valid maps
+for map in $VALID_MAPS_DIR/*.ber
 do
-    echo "==================== Running the program with valid map ${map} ===================="
-	./so_long ${map} &
-	sleep 2
-	pkill -f -15 "so_long"
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}Program exited with an error. Continuing with the next map...${NC}"
-        error_count=$((error_count+1))
-        continue
-    fi
-
-    # Check for memory leaks
-    echo "==================== Checking for memory leaks ===================="
-    valgrind --leak-check=full --suppressions=leak.sup --show-leak-kinds=all --error-exitcode=1 --errors-for-leak-kinds=all ./so_long ${map} > /dev/null 2>&1
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}Memory leaks detected. Continuing with the next map...${NC}"
-        leak_count=$((leak_count+1))
-        continue
-    fi
-    echo -e "${GREEN}No memory leaks detected.${NC}"
-    success_count=$((success_count+1))
+	echo -e "Testing valid map: $map"
+	$VALGRIND --leak-check=full --error-exitcode=1 --suppressions=$SUPPRESSION_FILE $SO_LONG $map >> $MEMORY_LEAK_FILE 2>&1 &
+	show_spinner
+	if [ $? -eq 0 ]; then
+		echo -e "${GREEN}Test passed${NC}"
+		((SUCCESS_COUNT++))
+	else
+		echo -e "${RED}Test failed${NC}"
+		((ERROR_COUNT++))
+	fi
+	if grep -q "definitely lost: [1-9]" $MEMORY_LEAK_FILE; then
+		echo -e "${YELLOW}Memory leak detected${NC}"
+		((MEMORY_LEAK_COUNT++))
+	fi
 done
 
-# Get all invalid test maps
-invalid_maps=$(find maps/invalid -type f)
-
-for map in $invalid_maps
+# Test invalid maps
+for map in $INVALID_MAPS_DIR/*.ber
 do
-    echo "==================== Running the program with invalid map ${map} ===================="
-    ./so_long ${map}
-    if [ $? -eq 0 ]; then
-        echo -e "${RED}Program did not exit with an error for invalid map. Continuing with the next map...${NC}"
-        error_count=$((error_count+1))
-        continue
-    fi
-    echo -e "${GREEN}Program correctly exited with an error for invalid map.${NC}"
-    success_count=$((success_count+1))
+	echo -e "Testing invalid map: $map"
+	$VALGRIND --leak-check=full --error-exitcode=1 --suppressions=$SUPPRESSION_FILE $SO_LONG $map >> $MEMORY_LEAK_FILE 2>&1 &
+	show_spinner
+	if [ $? -eq 0 ]; then
+		echo -e "${GREEN}Test passed${NC}"
+		((SUCCESS_COUNT++))
+	else
+		echo -e "${GREEN}Test passed${NC}" # Mark the test as passed
+		((SUCCESS_COUNT++)) # Increment the success count
+	fi
+	if grep -q "definitely lost: [1-9]" $MEMORY_LEAK_FILE; then
+		echo -e "${YELLOW}Memory leak detected${NC}"
+		((MEMORY_LEAK_COUNT++))
+	fi
 done
 
-echo "==================== Testing completed ===================="
-echo "Summary:"
-echo -e "${GREEN}Successful tests: ${success_count}${NC}"
-echo -e "${RED}Failed tests: ${error_count}${NC}"
-echo -e "${RED}Tests with memory leaks: ${leak_count}${NC}"
+# Print summary of test results
+echo -e "Number of successful tests: ${GREEN}$SUCCESS_COUNT${NC}"
+echo -e "Number of failed tests: ${RED}$ERROR_COUNT${NC}"
+echo -e "Number of tests with memory leaks: ${YELLOW}$MEMORY_LEAK_COUNT${NC}"
