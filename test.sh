@@ -25,7 +25,9 @@ valid_maps=$(find maps/valid -type f)
 for map in $valid_maps
 do
     echo "==================== Running the program with valid map ${map} ===================="
-    ./so_long ${map}
+	./so_long ${map} &
+	sleep 2
+	pkill -f -15 "so_long"
     if [ $? -ne 0 ]; then
         echo -e "${RED}Program exited with an error. Continuing with the next map...${NC}"
         error_count=$((error_count+1))
