@@ -6,7 +6,7 @@
 /*   By: nrontey <nrontey@student.42angouleme.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 22:46:45 by nrontey           #+#    #+#             */
-/*   Updated: 2024/01/19 16:05:26 by nrontey          ###   ########.fr       */
+/*   Updated: 2024/02/22 11:03:15 by nrontey          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,16 @@ static int	isborder(t_data *data, int i)
 	return (0);
 }
 
-static void	dfs(t_game *game, int x, int y, int **visited)
+static void	deep_first_search(t_game *game, int x, int y, int **visited)
 {
 	if (x < 0 || y < 0 || x >= game->width || y >= game->height
 		|| visited[y][x] || game->map[y][x] == 1)
 		return ;
 	visited[y][x] = 1;
-	dfs(game, x - 1, y, visited);
-	dfs(game, x + 1, y, visited);
-	dfs(game, x, y - 1, visited);
-	dfs(game, x, y + 1, visited);
+	deep_first_search(game, x - 1, y, visited);
+	deep_first_search(game, x + 1, y, visited);
+	deep_first_search(game, x, y - 1, visited);
+	deep_first_search(game, x, y + 1, visited);
 }
 
 int	check_path(t_game *game)
@@ -63,7 +63,7 @@ int	check_path(t_game *game)
 		visited[i] = calloc(game->width, sizeof(int));
 		i++;
 	}
-	dfs(game, game->player.x, game->player.y, visited);
+	deep_first_search(game, game->player.x, game->player.y, visited);
 	i = 0;
 	while (i < game->count_coll)
 	{
